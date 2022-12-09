@@ -1,0 +1,15 @@
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.centerBottom {
+  position: fixed;
+  left: 30%;
+  bottom: 0;
+}
+
+.sticky {
+  flex: none;
+}
