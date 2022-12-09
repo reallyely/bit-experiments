@@ -8,12 +8,18 @@ The counter component provides the UI and functionality to embiggen or shrink a 
 
 ### Component usage
 
+It's necessary to bring your own state management to use this component. The component internally is able to run your
+update functions and return you the new count.
+
 ```js
-<Counter />
-```
+const NecessaryWrapperComponent = ({ children }) => {
+  const [propCount, setCount] = useState(0);
+  return (
+    <Counter propCount={propCount} handleChangeCounter={setCount}>
+      {children}
+    </Counter>
+  );
+};
 
-JS live ?
-
-```js live
-<Counter />
+<NecessaryWrapperComponent />;
 ```

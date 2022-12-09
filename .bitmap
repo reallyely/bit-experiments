@@ -173,7 +173,7 @@
     },
     "functionals/counter": {
         "scope": "",
-        "version": "0.0.1",
+        "version": "134efcc8ec98dfa350fa2ee2e62337f0f71eda42",
         "mainFile": "index.ts",
         "rootDir": "scope-name/functionals/counter"
     },

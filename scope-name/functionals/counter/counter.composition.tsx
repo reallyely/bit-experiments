@@ -1,38 +1,44 @@
-import { Counter } from './counter';
-import React from 'react';
+import React, { ReactNode, useState } from 'react';
 
+import { Counter } from './counter';
+
+interface NecessaryWrapperComponentProps {
+  children?: ReactNode;
+}
+const NecessaryWrapperComponent = ({
+  children,
+}: NecessaryWrapperComponentProps) => {
+  const [propCount, setCount] = useState<number>(0);
+  return (
+    <Counter propCount={propCount} handleChangeCounter={setCount}>
+      {children}
+    </Counter>
+  );
+};
 export const BasicCounterWithNoChildren = () => {
-  return <Counter />;
+  return <NecessaryWrapperComponent />;
 };
-export const BringYourOwnCounter = () => {
+export const AddYourOwnChildren = () => {
   return (
-    <Counter>
+    <NecessaryWrapperComponent>
       <Counter.Increment></Counter.Increment>
       <Counter.Count></Counter.Count>
-    </Counter>
+    </NecessaryWrapperComponent>
   );
 };
-export const BringYourOwnHandler = () => {
-  return (
-    <Counter
-      handleChangeCounter={(newCount) => {
-        console.log(newCount);
-        return newCount * 2;
-      }}
-    >
-      <Counter.Increment></Counter.Increment>
-      <Counter.Count></Counter.Count>
-    </Counter>
-  );
-};
-export const ImproperUse = () => {
-  return (
-    <div>
-      <Counter.Increment></Counter.Increment>
-      <Counter.Count></Counter.Count>
-    </div>
-  );
-};
+// export const BringYourOwnHandler = () => {
+//   return (
+//     <Counter
+//       handleChangeCounter={(newCount) => {
+//         console.log(newCount);
+//         return newCount * 2;
+//       }}
+//     >
+//       <Counter.Increment></Counter.Increment>
+//       <Counter.Count></Counter.Count>
+//     </Counter>
+//   );
+// };
 
 // export const PassInNumber = () => {
 //   return <Counter  />;

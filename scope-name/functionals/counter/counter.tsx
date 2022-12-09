@@ -7,7 +7,14 @@ export type CounterProps = {
    * a node to be rendered in the special component.
    */
   children?: ReactNode;
-  handleChangeCounter?: any;
+  /**
+   * This component does nothing on its own, and must be used as a controlled component. Bring your own state updater for us to call
+   */
+  handleChangeCounter: any;
+  /**
+   * As a controlled component, we need the count to be passed to us
+   */
+  propCount: number;
 };
 
 interface CountContextInterface {
@@ -16,22 +23,21 @@ interface CountContextInterface {
 }
 const [useCountContext, CountContext] = createCtx<CountContextInterface>();
 
-export function Counter({ children, handleChangeCounter }: CounterProps) {
-  const [count, setCount] = useState<number>(0);
-  const handleSetCount = (newCount) => {
-    if (handleChangeCounter) {
-      setCount(handleChangeCounter(newCount));
-    } else {
-      setCount(newCount);
-    }
-    return newCount;
-  };
+export function Counter({
+  children,
+  handleChangeCounter,
+  propCount = 0,
+}: CounterProps) {
   return children ? (
-    <CountContext value={{ count, handleSetCount }}>
+    <CountContext
+      value={{ count: propCount, handleSetCount: handleChangeCounter }}
+    >
       <>{children} </>
     </CountContext>
   ) : (
-    <CountContext value={{ count, handleSetCount }}>
+    <CountContext
+      value={{ count: propCount, handleSetCount: handleChangeCounter }}
+    >
       <Counter.Count></Counter.Count>
       <Counter.Increment></Counter.Increment>
       <Counter.Decrement></Counter.Decrement>
@@ -63,9 +69,7 @@ function add(a) {
 function sub(a) {
   return (b) => b - a;
 }
-function constrainMax(num, max, cb) {
-  return cb(num) > max ? num : cb(num);
-}
+
 function createCtx<T extends {} | null>() {
   const ctx = createContext<T | undefined>(undefined);
   function useCtx() {
