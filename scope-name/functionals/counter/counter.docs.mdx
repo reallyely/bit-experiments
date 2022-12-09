@@ -3,31 +3,38 @@ description: A Counter component.
 ---
 
 import { Counter } from './counter';
+import { useCounter, countReducer } from './use-counter.hook';
 
 The counter component provides the UI and functionality to embiggen or shrink a number.
 
 ### Component usage
 
-It's necessary to bring your own state management to use this component.
-This component leverages Custom Hooks to allow you to tap into pre-defined functionality.
+This component allows for out-of-the box counter functionality.
+
+```js live
+<Counter></Counter>
+```
+
+If desired, you can overwrite the state update functionality by passing your own reducer
 
 ```js
-const WrappedCounter = ({ children }) => {
-  const { count, setDecrement, setIncrement } = useCounter(0);
+const UseOurOwnReducer = () => {
+  const { count, setIncrement, setDecrement } = useCounter({
+    reducer: (state, action) => {
+      const changes = countReducer(state, action);
+      // Block going negative
+      if (changes.count > 0) return { ...changes };
+      return { count: 0 };
+    },
+  });
   return (
     <Counter propCount={count}>
-      <Counter.Increment
-        handleIncrement={() => setIncrement(1)}
-        disabled={false}
-      ></Counter.Increment>
-      <Counter.Decrement
-        handleDecrement={() => setDecrement(1)}
-        disabled={false}
-      ></Counter.Decrement>
       <Counter.Count count={count}></Counter.Count>
+      <Counter.Increment handleIncrement={setIncrement}></Counter.Increment>
+      <Counter.Decrement handleDecrement={setDecrement}></Counter.Decrement>
     </Counter>
   );
 };
 
-<WrappedCounter />;
+<UseOurOwnReducer />;
 ```

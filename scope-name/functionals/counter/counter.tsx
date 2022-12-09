@@ -1,21 +1,21 @@
 import React, { ReactNode } from 'react';
-
-import { useCounter } from './use-counter.hook';
+import { countReducer, useCounter } from './use-counter.hook';
 
 export type CounterProps = {
   /**
    * a node to be rendered in the special component.
    */
   children?: ReactNode;
-
   /**
    * As a controlled component, we need the count to be passed to us
    */
   propCount: number;
 };
 
-export function Counter({ children, propCount = 0 }: CounterProps) {
-  const { count, setDecrement, setIncrement } = useCounter(propCount);
+export function Counter({ children, propCount }: CounterProps) {
+  const { count, setDecrement, setIncrement } = useCounter({
+    reducer: countReducer,
+  });
 
   return children ? (
     <>{children} </>
@@ -24,11 +24,11 @@ export function Counter({ children, propCount = 0 }: CounterProps) {
       <Counter.Count count={count}></Counter.Count>
       <Counter.Increment
         disabled={false}
-        handleIncrement={() => setIncrement(1)}
+        handleIncrement={() => setIncrement()}
       ></Counter.Increment>
       <Counter.Decrement
         disabled={false}
-        handleDecrement={() => setDecrement(1)}
+        handleDecrement={() => setDecrement()}
       ></Counter.Decrement>
     </>
   );
