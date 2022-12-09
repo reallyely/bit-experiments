@@ -1,53 +1,50 @@
 import React, { ReactNode, useState } from 'react';
 
 import { Counter } from './counter';
+import { useCounter } from './use-counter.hook';
 
-interface NecessaryWrapperComponentProps {
+interface WrappedComponentProps {
   children?: ReactNode;
 }
-const NecessaryWrapperComponent = ({
-  children,
-}: NecessaryWrapperComponentProps) => {
-  const [propCount, setCount] = useState<number>(0);
+const WrappedCounter = ({ children }: WrappedComponentProps) => {
+  const { count, setDecrement, setIncrement } = useCounter(0);
   return (
-    <Counter propCount={propCount} handleChangeCounter={setCount}>
-      {children}
+    <Counter propCount={count}>
+      <Counter.Increment
+        handleIncrement={() => setIncrement(1)}
+        disabled={false}
+      ></Counter.Increment>
+      <Counter.Decrement
+        handleDecrement={() => setDecrement(1)}
+        disabled={false}
+      ></Counter.Decrement>
+      <Counter.Count count={count}></Counter.Count>
     </Counter>
   );
 };
-export const BasicCounterWithNoChildren = () => {
-  return <NecessaryWrapperComponent />;
-};
 export const AddYourOwnChildren = () => {
-  return (
-    <NecessaryWrapperComponent>
-      <Counter.Increment></Counter.Increment>
-      <Counter.Count></Counter.Count>
-    </NecessaryWrapperComponent>
-  );
+  return <WrappedCounter></WrappedCounter>;
 };
-// export const BringYourOwnHandler = () => {
-//   return (
-//     <Counter
-//       handleChangeCounter={(newCount) => {
-//         console.log(newCount);
-//         return newCount * 2;
-//       }}
-//     >
-//       <Counter.Increment></Counter.Increment>
-//       <Counter.Count></Counter.Count>
-//     </Counter>
-//   );
-// };
-
-// export const PassInNumber = () => {
-//   return <Counter  />;
-// };
-
-// export const PassHugeNumberWithoutMax = () => {
-//   return <Counter  />;
-// };
-
-// export const CountUpTo10 = () => {
-//   return <Counter />;
-// };
+export const NoChildren = () => {
+  return <Counter propCount={0}></Counter>;
+};
+export const BringYourOwnValidation = () => {
+  const NewCounter = () => {
+    const { count, setDecrement, setIncrement } = useCounter(0);
+    return (
+      <Counter propCount={count}>
+        <Counter.Increment
+          handleIncrement={() => setIncrement(1)}
+          disabled={false}
+        ></Counter.Increment>
+        <Counter.Decrement
+          // block going negative
+          handleDecrement={() => (count > 0 ? setDecrement(1) : null)}
+          disabled={count <= 0}
+        ></Counter.Decrement>
+        <Counter.Count count={count}></Counter.Count>
+      </Counter>
+    );
+  };
+  return <NewCounter />;
+};
